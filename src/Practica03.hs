@@ -26,6 +26,36 @@ u = Var "u"
 w = Var "w"
 v = Var "v"
 
+noRep :: Eq a => [a] -> [a]
+noRep [] = []
+noRep (x:xs)
+    | x `elem` xs = noRep xs
+    | otherwise = x : noRep xs
+
+negar :: Prop -> Prop
+negar (Var p) = Not (Var p)
+negar (Cons True) = Cons False
+negar (Cons False) = Cons True
+negar (Not p) = p
+negar (And p q) = Or (negar p) (negar q)
+negar (Or p q) = And (negar p) (negar q)
+negar (Impl p q) = And p (negar q)
+negar (Syss p q) = negar (And (Impl p q)(Impl q p))
+
+distribuir :: Prop -> Prop
+distribuir (Or p (And q r)) = And (distribuir (Or p q)) (distribuir (Or p r))
+distribuir (Or (And q r) p) = And (distribuir (Or p q)) (distribuir (Or p r))
+distribuir (Or p q) = Or (distribuir p) (distribuir q)
+distribuir (And p q) = And (distribuir p) (distribuir q)
+distribuir  p = p
+
+rs :: [Clausula] -> [Clausula]
+rs[] = []
+rs [x] = [x]
+rs (x:(y:xs))
+    | hayResolvente x y = noRep((x:(y:xs)) ++ [resolucion x y] ++ rs (x:xs) ++ rs (y:xs))
+    | otherwise = noRep((x:(y:xs)) ++ rs (x:xs) ++ rs (y:xs))
+
 {-
 FORMAS NORMALES
 -}
