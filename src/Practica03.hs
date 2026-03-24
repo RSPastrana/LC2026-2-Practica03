@@ -42,6 +42,17 @@ negar (Or p q) = And (negar p) (negar q)
 negar (Impl p q) = And p (negar q)
 negar (Syss p q) = negar (And (Impl p q)(Impl q p))
 
+--Funcion auxiliar para fnn--
+elimEquiv :: Prop -> Prop
+elimEquiv (Var p)= Var p
+elimEquiv (Cons True) = Cons True
+elimEquiv (Cons False) = Cons False
+elimEquiv (Not p) = Not p
+elimEquiv (And p q) = And (elimEquiv p) (elimEquiv q)
+elimEquiv (Or p q) = Or (elimEquiv p) (elimEquiv q)
+elimEquiv (Impl p q) = Or (Not (elimEquiv p)) (elimEquiv q)
+elimEquiv (Syss p q) = And (elimEquiv (Impl p q)) (elimEquiv (Impl q p))
+
 distribuir :: Prop -> Prop
 distribuir (Or p (And q r)) = And (distribuir (Or p q)) (distribuir (Or p r))
 distribuir (Or (And q r) p) = And (distribuir (Or p q)) (distribuir (Or p r))
@@ -62,12 +73,18 @@ FORMAS NORMALES
 
 --Ejercicio 1
 fnn :: Prop -> Prop
-fnn = undefined
-
+fnn (Var p) = Var p
+fnn (Cons True) = Cons True
+fnn (Cons False) = Cons False
+fnn (Not p) = fnn (negar (elimEquiv p))
+fnn (And p q) = And (fnn p) (fnn q)
+fnn (Or p q) = Or (fnn p) (fnn q)
+fnn (Impl p q) = fnn (elimEquiv (Impl p q))
+fnn (Syss p q) = fnn (elimEquiv (Syss p q))
 
 --Ejercicio 2
 fnc :: Prop -> Prop
-fnc = undefined
+fnc p = distribuir (fnn p)
 
 {-
 RESOLUCION BINARIA
