@@ -111,7 +111,25 @@ litInOr (Or p q) = (litInOr p) ++ (litInOr q)
 
 --Ejercicio 2
 resolucion :: Clausula -> Clausula -> Clausula
-resolucion = undefined
+resolucion [] [] = []
+resolucion c1 [] = c1
+resolucion [] c2 = c2
+resolucion [Var p] [Var q]
+    | (Var q) == negar (Var p) = []
+    | (Var p) == negar (Var q) = []
+    | otherwise = [Var p] ++ [Var q]    
+
+resolucion (l1:c1) (l2:c2)
+    | negar l1 `elem` (l2:c2) = noRep (removerLit(l1) (c1) ++ removerLit (negar l1) (l2:c2))
+    | otherwise = noRep ([l1] ++ (noRep (resolucion (c1) (l2:c2))))
+
+--Funcion auxiliar para resolucion--
+removerLit :: Literal -> Clausula -> Clausula
+removerLit l [] = []
+removerLit l (x:xs)
+    | x == l = xs
+    | otherwise = x : removerLit l xs
+    where l = x
 
 {-
 ALGORITMO DE SATURACION
