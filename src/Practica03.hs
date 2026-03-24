@@ -96,7 +96,18 @@ type Clausula = [Literal]
 
 --Ejercicio 1
 clausulas :: Prop -> [Clausula]
-clausulas = undefined
+clausulas (Var p) = [ [Var p] ]
+clausulas (Not p) = [ [Not p] ] --porque en FNC las negaciones aparecen en frente de literales
+clausulas (And p q) = clausulas p ++ clausulas q
+clausulas (Or p q) = [litInOr (Or p q)]
+
+--Funcion auxiliar para clausulas--
+litInOr :: Prop -> [Literal]
+litInOr (Not p) = [ Not p ]
+litInOr (Var p) = [Var p]
+litInOr (Cons True) = [Cons True]
+litInOr (Cons False) = [Cons False]
+litInOr (Or p q) = (litInOr p) ++ (litInOr q) 
 
 --Ejercicio 2
 resolucion :: Clausula -> Clausula -> Clausula
