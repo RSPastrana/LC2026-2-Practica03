@@ -135,7 +135,12 @@ ALGORITMO DE SATURACION
 
 --Ejercicio 1
 hayResolvente :: Clausula -> Clausula -> Bool
-hayResolvente = undefined
+hayResolvente [] [] = False
+hayResolvente c1 [] = False
+hayResolvente [] c2 = False
+hayResolvente (l1:c1) (l2:c2)
+    | negar l1 `elem` (l2:c2) = True
+    | otherwise = hayResolvente (c1) (l2:c2) || hayResolvente (l1:c1) (c2)
 
 --Ejercicio 2
 --Funcion principal que pasa la formula proposicional a fnc e invoca a res con las clausulas de la formula.
