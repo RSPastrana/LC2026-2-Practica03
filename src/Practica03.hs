@@ -60,6 +60,14 @@ distribuir (Or p q) = Or (distribuir p) (distribuir q)
 distribuir (And p q) = And (distribuir p) (distribuir q)
 distribuir  p = p
 
+-- Funcion auxiliar para distribuir -- 
+distribuirAux :: Prop -> Prop
+distribuirAux p =
+  let p' = distribuir p
+  in if p' == p
+  then p
+  else distribuir p'
+
 rs :: [Clausula] -> [Clausula]
 rs[] = []
 rs [x] = [x]
@@ -89,7 +97,7 @@ fnn (Syss p q) = fnn (And (Impl p q) (Impl q p))
 
 --Ejercicio 2
 fnc :: Prop -> Prop
-fnc p = distribuir (fnn p)
+fnc p = distribuirAux (fnn p)
 
 {-
 RESOLUCION BINARIA
@@ -103,7 +111,7 @@ type Clausula = [Literal]
 clausulas :: Prop -> [Clausula]
 clausulas (Var p) = [ [Var p] ]
 clausulas (Not (Var p)) = [ [Not (Var p)] ] --porque en FNC las negaciones aparecen en frente de literales
-clausulas (And p q) = noRep (clausulas p ++ clausulas q)
+clausulas (And p q) = (clausulas p ++ clausulas q)
 clausulas (Or p q) = [litInOr (Or p q)]
 
 --Funcion auxiliar para clausulas--
@@ -112,7 +120,7 @@ litInOr (Not p) = [ Not p ]
 litInOr (Var p) = [Var p]
 litInOr (Cons True) = [Cons True]
 litInOr (Cons False) = [Cons False]
-litInOr (Or p q) = (litInOr p) ++ (litInOr q)
+litInOr (Or p q) = noRep((litInOr p) ++ (litInOr q))
 
 --Ejercicio 2
 resolucion :: Clausula -> Clausula -> Clausula
