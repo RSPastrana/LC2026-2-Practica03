@@ -28,8 +28,8 @@ En esta sección deben eliminar esta línea de texto, borrar la leyenda "Integra
     - No. de Cuenta: 322285930
 + Ayala Montiel María Fernanda
     - No. de Cuenta: 321309347
-+ Integrante 3
-    - No. de Cuenta: 
++ Carriche Arriaga Dante Raziel
+    - No. de Cuenta: 322037461
 
 ## Comentarios
 

@@ -186,7 +186,7 @@ iguales xs ys = contenido xs ys && contenido ys xs
 -- generar resolventes validos (usa hayResolvente)
 resolventes :: [Clausula] -> [Clausula]
 resolventes [] = []
-resolventes (c:cs) = resAux c cs ++ resolventes cs
+resolventes (c:cs) = noRep(resAux c cs ++ resolventes cs)
 
 resAux :: Clausula -> [Clausula] -> [Clausula]
 resAux _ [] = []
@@ -203,12 +203,9 @@ rS s = union s (resolventes s)
 satAux :: [Clausula] -> Bool
 satAux s
     | hayVacia s = False
-    | hayVacia nuevos = False   
-    | iguales s siguiente = True
-    | otherwise = satAux siguiente
-  where
-    nuevos = resolventes s
-    siguiente = union s nuevos
+    | hayVacia (resolventes s) = False   
+    | iguales (s) (rS s) = True
+    | otherwise = satAux (rS s)
 
 simplificarFNC :: Prop -> Prop
 simplificarFNC (And p q)
