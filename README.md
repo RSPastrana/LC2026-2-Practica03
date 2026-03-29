@@ -33,4 +33,6 @@ En esta sección deben eliminar esta línea de texto, borrar la leyenda "Integra
 
 ## Comentarios
 
-Recuerden que opcionalmente pueden agregar un comentario (ver los lineamientos de entrega). Si es el caso, borren esta línea y dejen su comentario.
+En cuanto a las pruebas, sucede que en los tests de forma normal conjuntiva con la formula Cr y forma normal conjuntiva con truco no dan las mismas expresiones, porque están en orden distinto. Por ejemplo, en la forman normal conjuntiva con truco la función espera es (((p V s) V q) Y ((r V s) V q)), pero nosotros regresamos ((q V (s V p)) Y (q V (s V r))), que son la misma fórmula pero en distinto orden.
+
+Por otra parte, en la Fórmula con truco en el test de saturación, se logra resolver el problema regresando True, lo cual no estamos seguros de si es un error, pero se dice que no se puede resolver en el test, pero nuestra implementación si llega a una conclusión, que de hecho coincide con lo que dice luego de la parte que dice deepseq return True. Pero puede que sea un error.
